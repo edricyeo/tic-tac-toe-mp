@@ -1,0 +1,39 @@
+.board-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .square {
+    width: 80px;
+    height: 80px;
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 80px;
+    border: 1px solid black;
+    outline: none;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .status {
+    margin: 20px;
+    font-weight: bold;
+    font-size: 40px;
+  }
+  
+  .play-again-button {
+      margin: 20px;
+      padding: 10px 20px;
+      border: 1px solid black;
+      border-radius: 5px;
+      font-size: 25px;
+      cursor: pointer;
+  }
+  
+  .play-again-button:hover {
+      background-color: green;
+      transform: scale(1.1);
+  }
