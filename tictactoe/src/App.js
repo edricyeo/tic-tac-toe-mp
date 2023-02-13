@@ -16,12 +16,15 @@ function App() {
 
   return (
     <div className="App">
-      <div className = "joinRoom">
-            <input placeholder='Enter Room Number' 
+      <div className = "join-room" aria-label = 'Component to allow players to join the same room'>
+            <input 
+            type = "text" 
+            placeholder = 'Room Number'
+            aria-label='An input field for the Room Number'
             onChange={(event)=>{
                 setRoom(event.target.value);
             }}/>
-            <button onClick={enterRoom}> Join Room </button>
+            <button className="join-room-button" onClick={enterRoom}> Join Room </button>
       </div>
       <GameBoard serverDetails = {{room, socket}}/>
     </div>

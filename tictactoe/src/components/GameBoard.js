@@ -44,8 +44,6 @@ const GameBoard = (props) => {
     return (
       <Square className="square"
         value={squares[index]}
-        // aria-label is for screen readers
-        aria-label={`square ${index} with value ${squares[index]}`}
         onClick={() => handleClick(index)}
       />
     );
@@ -74,7 +72,11 @@ const GameBoard = (props) => {
   const winner = determineWinner(squares);
   let status;
   if (winner) {
-    status = 'Winner: ' + winner;
+    if (winner === symbol) {
+        status = 'You win!';
+    } else {
+        status = 'You lose!';
+    }
   } else {
     if (isYourTurn) {
         status = 'Your turn!';
@@ -99,22 +101,22 @@ const GameBoard = (props) => {
 
   return (
     <div>
-      <div className="status">{status}</div>
+      <div aria-live = "polite" className="status">{status}</div>
       <div className = "board">
         <div className="board-row">
-            <div>{renderSquare(0)}</div>
-            <div>{renderSquare(1)}</div>
-            <div>{renderSquare(2)}</div>
+            <div aria-label={`square 1 with value ${squares[0]}`}>{renderSquare(0)}</div>
+            <div aria-label={`square 2 with value ${squares[1]}`}>{renderSquare(1)}</div>
+            <div aria-label={`square 3 with value ${squares[2]}`}>{renderSquare(2)}</div>
         </div>
         <div className="board-row">
-            <div>{renderSquare(3)}</div>
-            <div>{renderSquare(4)}</div>
-            <div>{renderSquare(5)}</div>
+            <div aria-label={`square 4 with value ${squares[3]}`}>{renderSquare(3)}</div>
+            <div aria-label={`square 5 with value ${squares[4]}`}>{renderSquare(4)}</div>
+            <div aria-label={`square 6 with value ${squares[5]}`}>{renderSquare(5)}</div>
         </div>
         <div className="board-row">
-            <div>{renderSquare(6)}</div>
-            <div>{renderSquare(7)}</div>
-            <div>{renderSquare(8)}</div>
+            <div aria-label={`square 7 with value ${squares[6]}`}>{renderSquare(6)}</div>
+            <div aria-label={`square 8 with value ${squares[7]}`}>{renderSquare(7)}</div>
+            <div aria-label={`square 9 with value ${squares[8]}`}>{renderSquare(8)}</div>
         </div>
       </div>
       <PlayAgainButton/>
