@@ -1,10 +1,18 @@
 import React, { useState } from 'react'
 import './App.css';
+import GameBoard from './components/GameBoard';
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:3001');
 
 function App() {
   const [room, setRoom] = useState('');
 
-  const enterRoom = () => {}
+  const enterRoom = () => {
+    if (room !== "") {
+        socket.emit("join_room", room);
+    }
+  }
 
   return (
     <div className="App">
@@ -15,6 +23,7 @@ function App() {
             }}/>
             <button onClick={enterRoom}> Join Room </button>
       </div>
+      <GameBoard serverDetails = {{room, socket}}/>
     </div>
   );
 }
