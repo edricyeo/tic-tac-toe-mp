@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './App.css';
 import GameBoard from './components/GameBoard';
 import io from 'socket.io-client';
@@ -7,6 +7,10 @@ const socket = io.connect('http://localhost:3001');
 
 function App() {
   const [room, setRoom] = useState('');
+
+  useEffect(() => {
+    document.title = "Tic Tac Toe";
+  }, []);
 
   const enterRoom = () => {
     if (room !== "") {
