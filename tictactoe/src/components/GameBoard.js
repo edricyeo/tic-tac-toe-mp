@@ -8,6 +8,7 @@ const GameBoard = (props) => {
   const { room, socket } = props.serverDetails;
   const [symbol, setSymbol] = useState("O");
 
+  // Receiving information from the server
   useEffect( () => {
     socket.on("receive_move", (data) => {
       console.log("client received reply:")
@@ -24,11 +25,26 @@ const GameBoard = (props) => {
     });
   }, [socket]);
 
+  // Sending information to the server
   const sendUpdatedBoard = (squares) => {
     socket.emit("send_move", {squares, room})
   }
 
-  const handleClick = (index) => {
+  /**
+   * Displays the correct value on a square in the game board.
+   */
+  const renderSquare = (index) => {
+    return (
+      <button className = "boardSquare" onClick={() => handleClickedSquare(index)}>
+        {squares[index]}
+      </button>
+    );
+  };
+
+  /**
+   * Handles a click on a square in the game board.
+   */
+  const handleClickedSquare = (index) => {
     const newSquares = [...squares];
     if (newSquares[index] || determineWinner(newSquares) || !isYourTurn) {
       return;
@@ -40,15 +56,11 @@ const GameBoard = (props) => {
     sendUpdatedBoard(newSquares);
   };
 
-  const renderSquare = (index) => {
-    return (
-      <Square className="square"
-        value={squares[index]}
-        onClick={() => handleClick(index)}
-      />
-    );
-  };
-
+  /**
+   * Determines the winner based on the squares array.
+   * @param {Array} squares - An array of squares.
+   * @returns {string|null} The symbol of the winner (X or O) or null if there is no winner.
+   */
   const determineWinner = (squares) => {
     const lines = [
       [0, 1, 2],
@@ -69,6 +81,40 @@ const GameBoard = (props) => {
     return null;
   };
 
+  /**
+   * Returns a string describing the status of a square.
+   * @param {number} index - The index of the square.
+   * @returns {string} A string describing the status of the square.
+   */
+  const describeSquare = (index) => {
+    if (squares[index]) {
+      return `square ${index + 1} which is marked with ${squares[index]}`
+    } else {
+      return `square ${index + 1} which is empty`
+    }
+  }
+
+  /**
+   * A button component that resets the board and allows the user to play again.
+   */
+  const PlayAgainButton = ({ onClick }) => (
+    <button 
+    className="play-again-button"
+    aria-label = {"Click this button to play again!"} 
+    onClick={() => resetBoard()}>
+      Play Again
+    </button>
+  );
+
+  /**
+   * Resets the board to its initial state.
+   */
+  const resetBoard = () => {
+    setSquares(Array(9).fill(null));
+    sendUpdatedBoard(Array(9).fill(null));
+  };
+
+  // Changes the status displayed according to game conditions
   const winner = determineWinner(squares);
   let status;
   if (winner) {
@@ -85,49 +131,29 @@ const GameBoard = (props) => {
     }
   }
 
-  const resetBoard = () => {
-    setSquares(Array(9).fill(null));
-    sendUpdatedBoard(Array(9).fill(null));
-  };
-
-  const PlayAgainButton = ({ onClick }) => (
-    <button 
-    className="play-again-button"
-    aria-label = {"Click this button to play again!"} 
-    onClick={() => resetBoard()}>
-      Play Again
-    </button>
-  );
-
   return (
     <div>
-      <div aria-live = "polite" className="status">{status}</div>
+      <header aria-live = "polite" className="status">{status}</header>
       <div className = "board">
         <div className="board-row">
-            <div aria-label={`square 1 with value ${squares[0]}`}>{renderSquare(0)}</div>
-            <div aria-label={`square 2 with value ${squares[1]}`}>{renderSquare(1)}</div>
-            <div aria-label={`square 3 with value ${squares[2]}`}>{renderSquare(2)}</div>
+            <div aria-label={describeSquare(0)}>{renderSquare(0)}</div>
+            <div aria-label={describeSquare(1)}>{renderSquare(1)}</div>
+            <div aria-label={describeSquare(2)}>{renderSquare(2)}</div>
         </div>
         <div className="board-row">
-            <div aria-label={`square 4 with value ${squares[3]}`}>{renderSquare(3)}</div>
-            <div aria-label={`square 5 with value ${squares[4]}`}>{renderSquare(4)}</div>
-            <div aria-label={`square 6 with value ${squares[5]}`}>{renderSquare(5)}</div>
+            <div aria-label={describeSquare(3)}>{renderSquare(3)}</div>
+            <div aria-label={describeSquare(4)}>{renderSquare(4)}</div>
+            <div aria-label={describeSquare(5)}>{renderSquare(5)}</div>
         </div>
         <div className="board-row">
-            <div aria-label={`square 7 with value ${squares[6]}`}>{renderSquare(6)}</div>
-            <div aria-label={`square 8 with value ${squares[7]}`}>{renderSquare(7)}</div>
-            <div aria-label={`square 9 with value ${squares[8]}`}>{renderSquare(8)}</div>
+            <div aria-label={describeSquare(6)}>{renderSquare(6)}</div>
+            <div aria-label={describeSquare(7)}>{renderSquare(7)}</div>
+            <div aria-label={describeSquare(8)}>{renderSquare(8)}</div>
         </div>
       </div>
       <PlayAgainButton/>
     </div>
   );
 };
-
-const Square = ({ value, onClick }) => (
-  <button className="square" onClick={onClick}>
-    {value}
-  </button>
-);
 
 export default GameBoard;
